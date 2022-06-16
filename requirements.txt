@@ -1,0 +1,4 @@
+djangorestframework
+line-bot-sdk
+gunicorn
+heroku
