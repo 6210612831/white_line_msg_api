@@ -44,24 +44,18 @@ class MessageApiView(APIView):
         token = json.loads(request.body.decode("utf-8") )
 
         userId = token["events"][0]["source"]["userId"]
-        message = str(token["events"][0]["message"]["text"])
+        message = str()
         replay_token = token["events"][0]["replyToken"]
-        # CheckUserId = False
 
         print(f"request.body : {request.body}")
         print(f"request.headers : {request.headers}")
         # print("replyToken",token["events"][0]["replyToken"])
         # print("text",token["events"][0]["message"]["text"])
-        print(message)
 
         headers = {"Authorization" : f"Bearer {CHANNEL_ACCESS_TOKEN}"}
 
-        # Check user id is valid
-        # if  requests.get(f"https://api.line.me/v2/bot/profile/{userId}", headers=headers).status_code == 200:
-        #     CheckUserId = True
-
         # If message = "add_me_to_audience_group" and userId is valid
-        if message == "add_me_to_audience_group":
+        if token["events"][0]["message"]["text"] == "add_me_to_audience_group":
             # PUT UserId to audienceGroup
             url = f'https://api.line.me/v2/bot/audienceGroup/upload'
             headers = {'content-type': 'application/json',
@@ -89,7 +83,7 @@ class MessageApiView(APIView):
         if len(replay_token) != 0:
             line_bot_api.reply_message(
                 replay_token ,
-                TextSendMessage("Reply : "+message)
+                TextSendMessage("Reply : "+token["events"][0]["message"]["text"])
             )
         else:
             return Response("", status=status.HTTP_500_INTERNAL_SERVER_ERROR)

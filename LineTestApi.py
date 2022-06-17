@@ -93,25 +93,25 @@ userId = "Ud3893b9950b8db28b49b95bfbaa408e0"
 
 # --------------------  Push Message To User Pool(AudienceGroup) -------------------- 
 
-url = f'https://api.line.me/v2/bot/message/narrowcast'
-headers = {'content-type': 'application/json',
-         "Authorization" : f"Bearer {token}"
-}
-payload = {
-            "messages": 
-            [
-                {
-                    "type":"text",
-                    "text":"Hello World To Audience Group"
-                }
-            ],
-            "recipient": 
-            {
-                    "type": "audience",
-                    "audienceGroupId": audienceGroupId
-            }     
-}
-res = requests.post(url, headers=headers,data=json.dumps(payload))
+# url = f'https://api.line.me/v2/bot/message/narrowcast'
+# headers = {'content-type': 'application/json',
+#          "Authorization" : f"Bearer {token}"
+# }
+# payload = {
+#             "messages": 
+#             [
+#                 {
+#                     "type":"text",
+#                     "text":"Hello World To Audience Group"
+#                 }
+#             ],
+#             "recipient": 
+#             {
+#                     "type": "audience",
+#                     "audienceGroupId": audienceGroupId
+#             }     
+# }
+# res = requests.post(url, headers=headers,data=json.dumps(payload))
 
 
 
