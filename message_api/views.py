@@ -40,8 +40,8 @@ class MessageApiView(APIView):
 
         token = json.loads(request.body.decode("utf-8") )
 
-        # print(f"request.body : {request.body}")
-        # print(f"request.headers : {request.headers}")
+        print(f"request.body : {request.body}")
+        print(f"request.headers : {request.headers}")
         # print("replyToken",token["events"][0]["replyToken"])
         # print("text",token["events"][0]["message"]["text"])
         try:
