@@ -23,11 +23,18 @@ import json
 
 CHANNEL_SECRET = "2fd29402f72edea813df01ad10854262"
 CHANNEL_ACCESS_TOKEN = "JtUxiyw8orHxQEgjPiFWXrQsYEYxnnNiSrnAwhzoXAJznUZLr/WqO7iWb76m/dqR2WBdox+hjeCwUVn8ApuVrVz833kAzrtFETGXx8fou0XnGrcwM++A0S/AZX0ygUii02fHLZpnw5V0zd3zK67MQwdB04t89/1O/w1cDnyilFU="
-AUDIENCEGROUPID = 4419978079826
+AUDIENCEGROUPID = 4735937759476
 
 
 # Create your views here.
 class MessageApiView(APIView):
+    def get_audience_count():
+            url = f'https://api.line.me/v2/bot/audienceGroup/{AUDIENCEGROUPID}'
+            headers = {"Authorization" : f"Bearer {CHANNEL_ACCESS_TOKEN}"}
+            res = requests.get(url, headers=headers)
+            return res.json()['audienceGroup']['audienceCount']
+
+
 
     def get(self, request, *args, **kwargs):
          return Response("serializer.data", status=status.HTTP_200_OK)
@@ -55,6 +62,10 @@ class MessageApiView(APIView):
 
         # If message = "add_me_to_audience_group" and userId is valid
         if message == "add_me_to_audience_group":
+
+            old_audience_count = self.get_audience_count()
+
+
             # PUT UserId to audienceGroup
             url = f'https://api.line.me/v2/bot/audienceGroup/upload'
             headers = {'content-type': 'application/json',
@@ -72,6 +83,11 @@ class MessageApiView(APIView):
             }
             res = requests.put(url, headers=headers,data=json.dumps(payload))
             print("STATUS FOR ADD USER TO AUDIENCEGROUP : ",res.status_code,res.json())
+
+            new_audience_count = self.get_audience_count()
+
+            print(f"audience_count old - new : {old_audience_count} - {new_audience_count}")
+
             payload = {
                         "to": [f"{userId}"],
                         "messages": 
@@ -82,11 +98,11 @@ class MessageApiView(APIView):
                                 }
                             ]
                 }
-            if res.status_code != 202:
+            if new_audience_count == old_audience_count:
                 #print("Can't add UserId to audienceGroup")
-                payload["messages"][0]["text"] = "Cant add you to user pool"
+                payload["messages"][0]["text"] = "Cant add you to user pool or you alreay exist in user pool"
             else:
-                payload["messages"][0]["text"] = "Add you to user pool done!!"
+                payload["messages"][0]["text"] = "Add you to user pool complete"
             url = f'https://api.line.me/v2/bot/message/multicast'
             headers = {'content-type': 'application/json',
                     "Authorization" : f"Bearer {CHANNEL_ACCESS_TOKEN}"
@@ -104,6 +120,9 @@ class MessageApiView(APIView):
             return Response("", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response("", status=status.HTTP_200_OK)
+
+
+
 
 
 def index(request):
