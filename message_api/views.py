@@ -32,6 +32,9 @@ class MessageApiView(APIView):
     def get(self, request, *args, **kwargs):
          return Response("serializer.data", status=status.HTTP_200_OK)
 
+   # def isUserIdExistInAudienceGroup():
+        
+
     def post(self, request, *args, **kwargs):
         
         global CHANNEL_SECRET,CHANNEL_ACCESS_TOKEN
@@ -76,11 +79,16 @@ class MessageApiView(APIView):
             res = requests.put(url, headers=headers,data=json.dumps(payload))
             if res.status_code != 200:
                 print("Can't add UserId to audienceGroup")
+            else:
+                line_bot_api.reply_message(
+                replay_token ,
+                TextSendMessage("Add you to user pool is done!!")
+            )
             
         if len(replay_token) != 0:
             line_bot_api.reply_message(
                 replay_token ,
-                TextSendMessage(message)
+                TextSendMessage("Reply : "+message)
             )
         else:
             return Response("", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
