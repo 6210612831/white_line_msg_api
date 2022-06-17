@@ -93,7 +93,7 @@ class MessageApiView(APIView):
                     "Authorization" : f"Bearer {token}"
             }
             res = requests.post(url, headers=headers,data=json.dumps(payload))
-            print("STATUS FOR PUT MESSAGE TO USER : ",res.status_code)
+            print("STATUS FOR PUT MESSAGE TO USER : ",res.status_code,res.json())
 
             
         if len(replay_token) != 0:
