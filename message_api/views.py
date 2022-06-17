@@ -109,6 +109,7 @@ class MessageApiView(APIView):
             }
             res = requests.post(url, headers=headers,data=json.dumps(payload))
             print("STATUS FOR PUT MESSAGE TO USER : ",res.status_code,res.json())
+            return Response("", status=status.HTTP_200_OK)
 
             
         if len(replay_token) != 0:
