@@ -28,11 +28,7 @@ AUDIENCEGROUPID = 4735937759476
 
 # Create your views here.
 class MessageApiView(APIView):
-    def get_audience_count():
-            url = f'https://api.line.me/v2/bot/audienceGroup/{AUDIENCEGROUPID}'
-            headers = {"Authorization" : f"Bearer {CHANNEL_ACCESS_TOKEN}"}
-            res = requests.get(url, headers=headers)
-            return res.json()['audienceGroup']['audienceCount']
+
 
 
 
@@ -43,6 +39,11 @@ class MessageApiView(APIView):
         
 
     def post(self, request, *args, **kwargs):
+        def get_audience_count():
+            url = f'https://api.line.me/v2/bot/audienceGroup/{AUDIENCEGROUPID}'
+            headers = {"Authorization" : f"Bearer {CHANNEL_ACCESS_TOKEN}"}
+            res = requests.get(url, headers=headers)
+            return res.json()['audienceGroup']['audienceCount']
         
         global CHANNEL_SECRET,CHANNEL_ACCESS_TOKEN
         line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
@@ -63,8 +64,7 @@ class MessageApiView(APIView):
         # If message = "add_me_to_audience_group" and userId is valid
         if message == "add_me_to_audience_group":
 
-            old_audience_count = self.get_audience_count()
-
+            old_audience_count = get_audience_count()
 
             # PUT UserId to audienceGroup
             url = f'https://api.line.me/v2/bot/audienceGroup/upload'
@@ -84,7 +84,7 @@ class MessageApiView(APIView):
             res = requests.put(url, headers=headers,data=json.dumps(payload))
             print("STATUS FOR ADD USER TO AUDIENCEGROUP : ",res.status_code,res.json())
 
-            new_audience_count = self.get_audience_count()
+            new_audience_count = get_audience_count()
 
             print(f"audience_count old - new : {old_audience_count} - {new_audience_count}")
 
