@@ -71,7 +71,7 @@ class MessageApiView(APIView):
                         ]
             }
             res = requests.put(url, headers=headers,data=json.dumps(payload))
-
+            print("STATUS FOR ADD USER TO AUDIENCEGROUP : ",res.status_code,res.json())
             payload = {
                         "to": [f"{userId}"],
                         "messages": 
@@ -82,7 +82,6 @@ class MessageApiView(APIView):
                                 }
                             ]
                 }
-
             if res.status_code != 200:
                 #print("Can't add UserId to audienceGroup")
                 payload["messages"][0]["text"] = "Cant add you to user pool"
