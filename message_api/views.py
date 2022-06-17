@@ -72,25 +72,28 @@ class MessageApiView(APIView):
             }
             res = requests.put(url, headers=headers,data=json.dumps(payload))
 
-            if res.status_code != 200:
-                print("Can't add UserId to audienceGroup")
-            else:
-                url = f'https://api.line.me/v2/bot/message/multicast'
-                headers = {'content-type': 'application/json',
-                        "Authorization" : f"Bearer {token}"
-                }
-                payload = {
+            payload = {
                         "to": [f"{userId}"],
                         "messages": 
                             [
                                 {
                                     "type":"text",
-                                    "text":"Add you to user pool is done!!"
+                                    "text":"You have call add me to audience group function"
                                 }
                             ]
                 }
-                res = requests.post(url, headers=headers,data=json.dumps(payload))
-                print("STATUS FOR PUT MESSAGE TO USER : ",res.status_code)
+
+            if res.status_code != 200:
+                #print("Can't add UserId to audienceGroup")
+                payload["messages"][0]["text"] = "Cant add you to user pool"
+            else:
+                payload["messages"][0]["text"] = "Add you to user pool done!!"
+            url = f'https://api.line.me/v2/bot/message/multicast'
+            headers = {'content-type': 'application/json',
+                    "Authorization" : f"Bearer {token}"
+            }
+            res = requests.post(url, headers=headers,data=json.dumps(payload))
+            print("STATUS FOR PUT MESSAGE TO USER : ",res.status_code)
 
             
         if len(replay_token) != 0:
