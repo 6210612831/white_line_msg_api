@@ -74,9 +74,9 @@ class MessageApiView(APIView):
                         ]
             }
             res = requests.put(url, headers=headers,data=json.dumps(payload))
-        if res.status_code != 200:
-            print("Can't add UserId to audienceGroup")
-        
+            if res.status_code != 200:
+                print("Can't add UserId to audienceGroup")
+            
         if len(replay_token) != 0:
             line_bot_api.reply_message(
                 replay_token ,
