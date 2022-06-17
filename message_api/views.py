@@ -23,7 +23,7 @@ import json
 
 CHANNEL_SECRET = "2fd29402f72edea813df01ad10854262"
 CHANNEL_ACCESS_TOKEN = "JtUxiyw8orHxQEgjPiFWXrQsYEYxnnNiSrnAwhzoXAJznUZLr/WqO7iWb76m/dqR2WBdox+hjeCwUVn8ApuVrVz833kAzrtFETGXx8fou0XnGrcwM++A0S/AZX0ygUii02fHLZpnw5V0zd3zK67MQwdB04t89/1O/w1cDnyilFU="
-AUDIENCEGROUPID = 3695566572508
+AUDIENCEGROUPID = 4419978079826
 
 
 # Create your views here.
@@ -82,7 +82,7 @@ class MessageApiView(APIView):
                                 }
                             ]
                 }
-            if res.status_code != 200:
+            if res.status_code != 202:
                 #print("Can't add UserId to audienceGroup")
                 payload["messages"][0]["text"] = "Cant add you to user pool"
             else:
