@@ -42,9 +42,8 @@ class MessageApiView(APIView):
         # parser = WebhookParser(CHANNEL_SECRET)
 
         token = json.loads(request.body.decode("utf-8") )
-
+        message = token["events"][0]["message"]["text"]
         userId = token["events"][0]["source"]["userId"]
-        message = str()
         replay_token = token["events"][0]["replyToken"]
 
         print(f"request.body : {request.body}")
@@ -55,7 +54,7 @@ class MessageApiView(APIView):
         headers = {"Authorization" : f"Bearer {CHANNEL_ACCESS_TOKEN}"}
 
         # If message = "add_me_to_audience_group" and userId is valid
-        if token["events"][0]["message"]["text"] == "add_me_to_audience_group":
+        if message == "add_me_to_audience_group":
             # PUT UserId to audienceGroup
             url = f'https://api.line.me/v2/bot/audienceGroup/upload'
             headers = {'content-type': 'application/json',
@@ -72,18 +71,32 @@ class MessageApiView(APIView):
                         ]
             }
             res = requests.put(url, headers=headers,data=json.dumps(payload))
+
             if res.status_code != 200:
                 print("Can't add UserId to audienceGroup")
             else:
-                line_bot_api.reply_message(
-                replay_token ,
-                TextSendMessage("Add you to user pool is done!!")
-            )
+                url = f'https://api.line.me/v2/bot/message/multicast'
+                headers = {'content-type': 'application/json',
+                        "Authorization" : f"Bearer {token}"
+                }
+                payload = {
+                        "to": [f"{userId}"],
+                        "messages": 
+                            [
+                                {
+                                    "type":"text",
+                                    "text":"Add you to user pool is done!!"
+                                }
+                            ]
+                }
+                res = requests.post(url, headers=headers,data=json.dumps(payload))
+                print("STATUS FOR PUT MESSAGE TO USER : ",res.status_code)
+
             
         if len(replay_token) != 0:
             line_bot_api.reply_message(
                 replay_token ,
-                TextSendMessage("Reply : "+token["events"][0]["message"]["text"])
+                TextSendMessage("Reply : "+ message)
             )
         else:
             return Response("", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
