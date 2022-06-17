@@ -80,7 +80,7 @@ class MessageApiView(APIView):
         if len(replay_token) != 0:
             line_bot_api.reply_message(
                 replay_token ,
-                TextSendMessage(replay_token)
+                TextSendMessage(message)
             )
         else:
             return Response("", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
