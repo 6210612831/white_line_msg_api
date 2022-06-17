@@ -90,7 +90,7 @@ class MessageApiView(APIView):
                 payload["messages"][0]["text"] = "Add you to user pool done!!"
             url = f'https://api.line.me/v2/bot/message/multicast'
             headers = {'content-type': 'application/json',
-                    "Authorization" : f"Bearer {token}"
+                    "Authorization" : f"Bearer {CHANNEL_ACCESS_TOKEN}"
             }
             res = requests.post(url, headers=headers,data=json.dumps(payload))
             print("STATUS FOR PUT MESSAGE TO USER : ",res.status_code,res.json())
