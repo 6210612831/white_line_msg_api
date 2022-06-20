@@ -186,7 +186,7 @@ class MessageApiView(APIView):
             for user in user_to_sent_list:
                 payload['to']=[f"{user.user_id}"]
                 res = requests.post(url, headers=headers,data=json.dumps(payload))
-                print("STATUS FOR PUT MESSAGE TO USER : ",res.status_code,res.json(),res.data)
+                print("STATUS FOR PUT MESSAGE TO USER : ",res.status_code,res.json())
                 print("MESSAGE TO USER : "+ message_to_sent)
             return "Sent to group "+group[0].name+" done!!"
 
