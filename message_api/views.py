@@ -118,7 +118,7 @@ class MessageApiView(APIView):
                 return "You didn't join any group"
 
             text = "Your group name : "    
-            for group_name in account[0].group:
+            for group_name in account[0].group.all():
                 text += group_name +","
             return text[:-1]
 
