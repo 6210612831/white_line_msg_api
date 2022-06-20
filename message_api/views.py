@@ -133,7 +133,12 @@ class MessageApiView(APIView):
                 text += group.name +","
             return text[:-1]
 
+        def set_admin(user_id):
+            account = Account.objects.filter(user_id=user_id)
+            account.is_admin = True
+            return "Set admin done!"
         def check_message(message,user_id):
+            message = message.lower()
             if message.find("join group") != -1:
                 return join_group(message,user_id)
             elif message.find("create group") != -1:
@@ -144,6 +149,8 @@ class MessageApiView(APIView):
                 return group_list(user_id)
             elif  message.find("group all") != -1:
                 return group_all()
+            elif message.find("setAdmin")!= -1:
+                return set_admin(user_id)
             return message
 
 
