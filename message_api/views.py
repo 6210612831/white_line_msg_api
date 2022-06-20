@@ -68,7 +68,8 @@ class MessageApiView(APIView):
             name = message[message.find("create group ")+len("create group "):]
             account = Account.objects.filter(user_id=user_id)
             group = Audience.objects.filter(name = name)
-
+            print(account)
+            print(account[0].is_admin)
             # Check user permission to create group
             if len(account) == 0 or not account[0].is_admin:
                 return "You not have permission to create group"
