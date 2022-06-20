@@ -162,7 +162,7 @@ class MessageApiView(APIView):
         # print("replyToken",token["events"][0]["replyToken"])
         # print("text",token["events"][0]["message"]["text"])
 
-        return_to_user_text = check_message(message)
+        return_to_user_text = check_message(message,userId)
 
         url = f'https://api.line.me/v2/bot/message/multicast'
         headers = {'content-type': 'application/json',
