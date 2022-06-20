@@ -12,7 +12,7 @@ class Audience(models.Model):
 
 class Account(models.Model):
     user_id = models.CharField(max_length = 180)
-    group = models.ForeignKey(Audience, on_delete = models.SET_NULL, blank = True, null = True)
+    group = models.ManyToManyField(Audience, blank = True, null = True)
     is_admin = models.BooleanField(default=False)
     def __str__(self):
         return f"ID : {self.id} , USER_ID : {self.user_id} , GROUP : {self.group} , ADMIN : {self.is_admin}"
