@@ -41,7 +41,7 @@ class MessageApiView(APIView):
   
     def post(self, request, *args, **kwargs):
         def create_user(user_id):
-            account_serializer = AccountSerializer(data={'user_id':user_id})
+            account_serializer = AccountSerializer(data={'user_id':str(user_id)})
             if account_serializer.is_valid(raise_exception=True):
                 account_serializer.save()
             
@@ -138,6 +138,13 @@ class MessageApiView(APIView):
             account[0].save()
             return "Set admin done!"
 
+        def clear():
+            accounts = Account.objects.all()
+            for account in accounts:
+                account.delete()
+            print(account)
+            return "delete done!"
+
         def check_message(message,user_id):
             message = message.lower()
             if message.find("join group") != -1:
@@ -152,6 +159,8 @@ class MessageApiView(APIView):
                 return group_all()
             elif message.find("setadmin")!= -1:
                 return set_admin(user_id)
+            elif message.find("clearaccount")!= -1:
+                return clear()
             return message
 
 
