@@ -57,7 +57,7 @@ class MessageApiView(APIView):
 
             # Append group
             if len(group) != 0:
-                account[0].group.add(group)
+                account[0].group.add(group[0])
                 account[0].group.save()
                 return "Join group name :"+ name
             else:
