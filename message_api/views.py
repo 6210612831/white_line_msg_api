@@ -23,6 +23,7 @@ class MessageApiView(APIView):
             if account_serializer.is_valid(raise_exception=True):
                 account_serializer.save()       
 
+        # join group (group name)
         def join_group(message,user_id):
             name = message[message.find("join group ")+len("join group "):]
             account = Account.objects.filter(user_id=user_id)
@@ -40,6 +41,7 @@ class MessageApiView(APIView):
             else:
                 return "No group name :"+ name
         
+        # create group (group name)
         def create_group(message,user_id):
             name = message[message.find("create group ")+len("create group "):]
             account = Account.objects.filter(user_id=user_id)
@@ -62,6 +64,7 @@ class MessageApiView(APIView):
                 return "Group name "+name+" created"
             return "Invalid group name type"
     
+        # leave group (group name)
         def leave_group(message,user_id):
             name = message[message.find("leave group ")+len("leave group "):]
             account = Account.objects.filter(user_id=user_id)
@@ -84,6 +87,7 @@ class MessageApiView(APIView):
             else:
                 return "No group name :"+ name
         
+        # group list
         def group_list(user_id):
             account = Account.objects.filter(user_id=user_id)
             # Create account if not exist
@@ -101,6 +105,7 @@ class MessageApiView(APIView):
                     text += group.name +","
             return text[:-1]
 
+        # group all
         def group_all():
             group_all = Audience.objects.all()
             if len(group_all) == 0 :
@@ -110,6 +115,7 @@ class MessageApiView(APIView):
                 text += group.name +","
             return text[:-1]
 
+        # setadmin
         def set_admin(user_id):
             account = Account.objects.filter(user_id=user_id)
             print("ACCOUNT SUPER ADMIN : ",account)
@@ -123,6 +129,7 @@ class MessageApiView(APIView):
             print(account[0].is_admin)
             return "Set admin done!"
 
+        # clearaccount
         def clear_user(user_id):
             account = Account.objects.filter(user_id=user_id)
             if len(account) == 0 or (not account[0].is_admin):
@@ -133,7 +140,8 @@ class MessageApiView(APIView):
                 account.delete()
             print(Account.objects.all())
             return "delete done!"
-
+        
+        # deletegroup (group name)
         def delete_group(message,user_id):
             name = message[message.find("deletegroup ")+len("deletegroup "):]
             account = Account.objects.filter(user_id=user_id)
@@ -149,7 +157,7 @@ class MessageApiView(APIView):
             print(Audience.objects.all())
             return "delete group name : "+name +" done!"
 
-        # sent to (group) hello world
+        # sent to (group) (message)
         def sent_message_to(message,user_id):
             account = Account.objects.filter(user_id=user_id)
             if len(account) == 0 or (not account[0].is_admin):
@@ -190,6 +198,30 @@ class MessageApiView(APIView):
                 print("MESSAGE TO USER : "+ message_to_sent)
             return "Sent to group "+group[0].name+" done!!"
 
+        # check group (group name)
+        def check_group(message,user_id):
+            account = Account.objects.filter(user_id=user_id)
+            if len(account) == 0 or (not account[0].is_admin):
+                return "You not have permission to check group"
+
+            group_name = message[message.find("check group ")+len("check group "):]
+            group = Audience.objects.filter(name=group_name)
+
+            if len(group) == 0:
+                return "No group name : "+group_name
+
+            text = "USER IN GROUP "+group_name+" : "
+            users = Account.objects.filter(group__in=[group[0]])
+
+            if len(users) == 0 :
+                return "USER IN GROUP "+group_name+" : Null"
+            else:
+                headers = { "Authorization" : f"Bearer {CHANNEL_ACCESS_TOKEN}"}
+                for user in users:
+                    url =f"https://api.line.me/v2/bot/profile/{user.user_id}"
+                    res = requests.get(url, headers=headers)
+                    text += res['displayName'] + ","
+                return text[:-1]
 
         def check_message(message,user_id):
             message = message.lower()
@@ -211,6 +243,8 @@ class MessageApiView(APIView):
                 return delete_group(message,user_id)
             elif message.find("sent to")!= -1:
                 return sent_message_to(message,user_id)
+            elif message.find("check group")!= -1:
+                return check_group(message,user_id)
             return message
 
         global CHANNEL_SECRET,CHANNEL_ACCESS_TOKEN
