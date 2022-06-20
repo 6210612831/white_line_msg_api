@@ -57,7 +57,7 @@ class MessageApiView(APIView):
 
             # Append group
             if len(group) != 0:
-                account[0].group.append(group)
+                account[0].group.add(group)
                 account[0].group.save()
                 return "Join group name :"+ name
             else:
@@ -117,9 +117,12 @@ class MessageApiView(APIView):
                 print("ACCOUNT : ",account)
                 return "You didn't join any group"
 
-            text = "Your group name : "    
-            for group_name in account[0].group.all():
-                text += group_name +","
+            text = "Your group name : "
+            if  len(account[0].group.all()) == 0:
+                text = "Your group is empty."
+            else:
+                for group_name in account[0].group.all():
+                    text += group_name +","
             return text[:-1]
 
         def group_all():
