@@ -43,8 +43,7 @@ class MessageApiView(APIView):
         def create_user(user_id):
             account_serializer = AccountSerializer(data={'user_id':str(user_id)})
             if account_serializer.is_valid(raise_exception=True):
-                account_serializer.save()
-            
+                account_serializer.save()       
 
         def join_group(message,user_id):
             name = message[message.find("join group ")+len("join group "):]
@@ -69,6 +68,7 @@ class MessageApiView(APIView):
             account = Account.objects.filter(user_id=user_id)
             group = Audience.objects.filter(name = name)
             print(account)
+            print(len(account))
             print(account[0].is_admin)
             # Check user permission to create group
             if len(account) == 0 or not account[0].is_admin:
