@@ -149,7 +149,7 @@ class MessageApiView(APIView):
                 return group_list(user_id)
             elif  message.find("group all") != -1:
                 return group_all()
-            elif message.find("setAdmin")!= -1:
+            elif message.find("setadmin")!= -1:
                 return set_admin(user_id)
             return message
 
