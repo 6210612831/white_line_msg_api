@@ -99,8 +99,7 @@ class MessageApiView(APIView):
             # Append group
             if len(group) != 0:
                 try:
-                    account[0].group.remove(group)
-                    account[0].group.save()
+                    account[0].group.remove(group[0])
                 except:
                     return "You didn't join group name :"+name
                 return "Leave group name :"+name
