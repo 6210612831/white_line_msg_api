@@ -58,7 +58,6 @@ class MessageApiView(APIView):
             # Append group
             if len(group) != 0:
                 account[0].group.add(group[0])
-                account[0].group.save()
                 return "Join group name :"+ name
             else:
                 return "No group name :"+ name
@@ -147,12 +146,31 @@ class MessageApiView(APIView):
             print(account[0].is_admin)
             return "Set admin done!"
 
-        def clear():
+        def clear_user(user_id):
+            account = Account.objects.filter(user_id=user_id)
+            if len(account) == 0 or (not account[0].is_admin):
+                return "You not have permission to create group"
+
             accounts = Account.objects.all()
             for account in accounts:
                 account.delete()
             print(Account.objects.all())
             return "delete done!"
+
+        def delete_group(message,user_id):
+            name = message[message.find("deletegroup ")+len("deletegroup "):]
+            account = Account.objects.filter(user_id=user_id)
+            group = Audience.objects.filter(name = name)
+
+            if len(account) == 0 or (not account[0].is_admin):
+                return "You not have permission to create group"
+
+            if len(group) == 0:
+                return "Can't delete becase no group name :"+name
+
+            group[0].delete()
+            print(Audience.objects.all())
+            return "delete group name : "+name +" done!"
 
         def check_message(message,user_id):
             message = message.lower()
@@ -169,7 +187,9 @@ class MessageApiView(APIView):
             elif message.find("setadmin")!= -1:
                 return set_admin(user_id)
             elif message.find("clearaccount")!= -1:
-                return clear()
+                return clear_user(user_id)
+            elif message.find("deletegroup")!= -1:
+                return delete_group(message,user_id)
             return message
 
 
