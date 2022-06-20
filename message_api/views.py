@@ -134,8 +134,14 @@ class MessageApiView(APIView):
         def set_admin(user_id):
             account = Account.objects.filter(user_id=user_id)
             print("ACCOUNT SUPER ADMIN : ",account)
+            if len(account) == 0 :
+                create_user(user_id)
+                account = Account.objects.filter(user_id=user_id)
+                print("ACCOUNT : ",account)
+                return "New user added"
             account[0].is_admin = True
             account[0].save()
+            print(account[0].is_admin)
             return "Set admin done!"
 
         def clear():
