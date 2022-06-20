@@ -153,9 +153,12 @@ class MessageApiView(APIView):
         def sent_message_to(message,user_id):
             account = Account.objects.filter(user_id=user_id)
             if len(account) == 0 or (not account[0].is_admin):
-                return "You not have permission to create group"
+                return "You not have permission to sent message multicast"
 
             group_message = message[message.find("sent to ")+len("sent to "):]
+            if group_message.find(" ") == -1:
+                return "Wrong message pattern"
+
             group_name = group_message[:group_message.find(" ")]
             message_to_sent = group_message[group_message.find(" ")+1:]
 
