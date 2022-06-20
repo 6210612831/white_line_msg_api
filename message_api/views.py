@@ -142,7 +142,7 @@ class MessageApiView(APIView):
             accounts = Account.objects.all()
             for account in accounts:
                 account.delete()
-            print(account)
+            print(Account.objects.all())
             return "delete done!"
 
         def check_message(message,user_id):
