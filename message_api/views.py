@@ -136,6 +136,7 @@ class MessageApiView(APIView):
         def set_admin(user_id):
             account = Account.objects.filter(user_id=user_id)
             account.is_admin = True
+            account.save()
             return "Set admin done!"
         def check_message(message,user_id):
             message = message.lower()
