@@ -71,7 +71,7 @@ class MessageApiView(APIView):
             print(len(account))
             print(account[0].is_admin)
             # Check user permission to create group
-            if len(account) == 0 or not account[0].is_admin:
+            if len(account) == 0 or (not account[0].is_admin):
                 return "You not have permission to create group"
 
             # check if group name is alreay exist
