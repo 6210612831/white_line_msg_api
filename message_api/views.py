@@ -120,8 +120,8 @@ class MessageApiView(APIView):
             if  len(account[0].group.all()) == 0:
                 text = "Your group is empty."
             else:
-                for group_name in account[0].group.all():
-                    text += group_name +","
+                for group in account[0].group.all():
+                    text += group.name +","
             return text[:-1]
 
         def group_all():
